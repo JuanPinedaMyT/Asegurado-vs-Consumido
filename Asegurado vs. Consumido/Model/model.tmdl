@@ -10,7 +10,7 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBIDesktopVersion = 2.143.1378.0 (25.05)+4e1de9c957866bc5336e0d250838314aa54ff3a8
 
-annotation PBI_QueryOrder = ["DimInsumo","DimItems","FactCompras","FactControlProyecto","DimProyecto","FactDevoluciones","FactAjustes"]
+annotation PBI_QueryOrder = ["DimInsumo","DimItems","FactCompras","FactControlProyecto","DimProyecto","FactDevoluciones"]
 
 ref table DimInsumo
 ref table DimItems
@@ -19,7 +19,6 @@ ref table FactControlProyecto
 ref table DimProyecto
 ref table Calculos
 ref table FactDevoluciones
-ref table FactAjustes
 
 ref cultureInfo en-US
 

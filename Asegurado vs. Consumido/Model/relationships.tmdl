@@ -23,15 +23,6 @@ relationship 3daf6a6e-78be-4c05-a8ef-b8651849f51b
 	toColumn: DimItems.SkIdItems
 
 relationship d4e855d0-514c-ea37-f8eb-6b9457e8246c
-	crossFilteringBehavior: bothDirections
 	fromColumn: FactCompras.CompraInsumo
 	toColumn: FactDevoluciones.CompraInsumo
-
-relationship AutoDetected_8b0cb54c-e9a1-4042-92af-534827e8012a
-	fromColumn: FactAjustes.SkIdInsumo
-	toColumn: DimInsumo.SkIdInsumo
-
-relationship AutoDetected_a4ec6242-02dd-4d61-ae66-71d51c1b8df5
-	fromColumn: FactAjustes.SkIdProyecto
-	toColumn: DimProyecto.SkIdProyecto
 

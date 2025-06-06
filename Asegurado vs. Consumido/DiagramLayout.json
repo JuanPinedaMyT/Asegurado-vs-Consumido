@@ -10,8 +10,8 @@
       "nodes": [
         {
           "location": {
-            "x": 504.327817261992,
-            "y": 15.696371097968434
+            "x": 274.39782250655594,
+            "y": 0
           },
           "nodeIndex": "DimInsumo",
           "nodeLineageTag": "daa5aa0e-524e-4e25-a57c-368082d4b3d7",
@@ -19,13 +19,13 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 2,
+          "zIndex": 1,
           "expandedHeight": 224
         },
         {
           "location": {
-            "x": 775.96289818621017,
-            "y": 65.027823120154935
+            "x": 523.68001640661907,
+            "y": 0.70955543900968721
           },
           "nodeIndex": "DimItems",
           "nodeLineageTag": "df8c157c-67e9-4968-95eb-8273d8b3933a",
@@ -33,13 +33,13 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 3,
+          "zIndex": 7,
           "expandedHeight": 176
         },
         {
           "location": {
-            "x": 259.36491907578187,
-            "y": 22.423387282812044
+            "x": 24.94958958846216,
+            "y": 0
           },
           "nodeIndex": "DimProyecto",
           "nodeLineageTag": "26c501e4-b5f2-4491-aa7f-18ed92fcd733",
@@ -47,41 +47,41 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 4,
+          "zIndex": 2,
           "expandedHeight": 152
         },
         {
           "location": {
-            "x": 712.50059402649549,
-            "y": 406.87637192237082
+            "x": 258.93483046731359,
+            "y": 228.0750434839639
           },
           "nodeIndex": "FactCompras",
           "nodeLineageTag": "1dab78a4-23cc-4865-ad10-81796fab3084",
           "size": {
-            "height": 200,
+            "height": 176,
             "width": 234
           },
-          "zIndex": 5,
+          "zIndex": 3,
           "expandedHeight": 296
         },
         {
           "location": {
-            "x": 168.23027513919286,
-            "y": 428.8011161190438
+            "x": 0,
+            "y": 248.83422804597598
           },
           "nodeIndex": "FactControlProyecto",
           "nodeLineageTag": "ae97ccec-b9dc-4b0e-922d-64ca227d4dbe",
           "size": {
-            "height": 176,
+            "height": 152,
             "width": 234
           },
-          "zIndex": 6,
+          "zIndex": 4,
           "expandedHeight": 272
         },
         {
           "location": {
-            "x": 0,
-            "y": 9.1277004158770154
+            "x": 532.22552402386,
+            "y": 337.56158219792695
           },
           "nodeIndex": "Calculos",
           "nodeLineageTag": "0e40f083-c8aa-46cf-a460-b18e3cf3baa0",
@@ -89,13 +89,13 @@
             "height": 72,
             "width": 234
           },
-          "zIndex": 7,
+          "zIndex": 5,
           "expandedHeight": 200
         },
         {
           "location": {
-            "x": 964.13548084058027,
-            "y": 231.79342642697029
+            "x": 583.72771413466,
+            "y": 181.1245456962921
           },
           "nodeIndex": "FactDevoluciones",
           "nodeLineageTag": "56739157-bca6-49be-8b8d-f17ce6d27e2c",
@@ -103,26 +103,12 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 10,
+          "zIndex": 6,
           "expandedHeight": 248
-        },
-        {
-          "location": {
-            "x": 425.88225079246627,
-            "y": 454.73334896305641
-          },
-          "nodeIndex": "FactAjustes",
-          "nodeLineageTag": "139409a3-dd51-4acb-a734-69a9061c6fa8",
-          "size": {
-            "height": 128,
-            "width": 234
-          },
-          "zIndex": 8,
-          "expandedHeight": 152
         }
       ],
       "name": "All tables",
-      "zoomValue": 100,
+      "zoomValue": 140.93331472388957,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
