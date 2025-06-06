@@ -185,34 +185,6 @@
           "value": {
             "expr": {
               "Literal": {
-                "Value": "78D"
-              }
-            }
-          }
-        },
-        "selector": {
-          "metadata": "select8"
-        }
-      },
-      {
-        "properties": {
-          "value": {
-            "expr": {
-              "Literal": {
-                "Value": "86D"
-              }
-            }
-          }
-        },
-        "selector": {
-          "metadata": "select4"
-        }
-      },
-      {
-        "properties": {
-          "value": {
-            "expr": {
-              "Literal": {
                 "Value": "82D"
               }
             }
@@ -227,7 +199,7 @@
           "value": {
             "expr": {
               "Literal": {
-                "Value": "68D"
+                "Value": "81.9688824955723D"
               }
             }
           }
@@ -240,17 +212,17 @@
   },
   "projectionOrdering": {
     "Rows": [
-      11,
+      3,
       0,
-      21,
-      12
+      8,
+      6,
+      4
     ],
     "Values": [
-      13,
+      5,
+      7,
       2,
-      1,
-      10,
-      20
+      1
     ]
   },
   "projectionActiveItems": {
@@ -265,6 +237,10 @@
       },
       {
         "queryRef": "DimItems.Item",
+        "suppressConcat": false
+      },
+      {
+        "queryRef": "DimItems.Item estado",
         "suppressConcat": false
       },
       {
@@ -291,46 +267,6 @@
         "Type": 1
       },
       {
-        "Restatement": "Disponible",
-        "Name": "select1",
-        "Type": 1
-      },
-      {
-        "Restatement": "Faltant",
-        "Name": "select3",
-        "Type": 1
-      },
-      {
-        "Restatement": "Es Item",
-        "Name": "select",
-        "Type": 1
-      },
-      {
-        "Restatement": "Faltante",
-        "Name": "select2",
-        "Type": 1
-      },
-      {
-        "Restatement": "Disponible Acumulado",
-        "Name": "select4",
-        "Type": 1
-      },
-      {
-        "Restatement": "Requiere Cambio",
-        "Name": "select6",
-        "Type": 1
-      },
-      {
-        "Restatement": "Extraído",
-        "Name": "select7",
-        "Type": 1
-      },
-      {
-        "Restatement": "Cambio Sugerido",
-        "Name": "select8",
-        "Type": 1
-      },
-      {
         "Restatement": "Nombre Proyecto",
         "Name": "DimProyecto.Nombre Proyecto",
         "Type": 2048
@@ -346,38 +282,13 @@
         "Type": 1
       },
       {
-        "Restatement": "Requiere Cambio OC",
-        "Name": "select5",
-        "Type": 1
+        "Restatement": "Item estado",
+        "Name": "DimItems.Item estado",
+        "Type": 2048
       },
       {
-        "Restatement": "OC Cantidad",
-        "Name": "select9",
-        "Type": 1
-      },
-      {
-        "Restatement": "Es OC",
-        "Name": "select10",
-        "Type": 1
-      },
-      {
-        "Restatement": "MaxItem",
-        "Name": "select12",
-        "Type": 1
-      },
-      {
-        "Restatement": "OC con disponible?",
-        "Name": "select13",
-        "Type": 1
-      },
-      {
-        "Restatement": "OC Item Acumulada",
-        "Name": "select14",
-        "Type": 1
-      },
-      {
-        "Restatement": "Cantidad a Cambiar",
-        "Name": "select11",
+        "Restatement": "Devoluciones",
+        "Name": "Calculos.Devoluciones",
         "Type": 1
       },
       {
@@ -474,6 +385,32 @@
                 "Entity": "DimItems"
               }
             },
+            "Property": "Item estado"
+          }
+        }
+      },
+      {
+        "type": 2,
+        "expression": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Calculos"
+              }
+            },
+            "Property": "Devoluciones"
+          }
+        }
+      },
+      {
+        "type": 0,
+        "expression": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimItems"
+              }
+            },
             "Property": "Item"
           }
         }
@@ -485,7 +422,7 @@
       "DataRoles": [
         {
           "Name": "Rows",
-          "Projection": 11,
+          "Projection": 3,
           "isActive": true
         },
         {
@@ -495,17 +432,27 @@
         },
         {
           "Name": "Rows",
-          "Projection": 21,
+          "Projection": 8,
           "isActive": true
         },
         {
           "Name": "Rows",
-          "Projection": 12,
+          "Projection": 6,
+          "isActive": true
+        },
+        {
+          "Name": "Rows",
+          "Projection": 4,
           "isActive": true
         },
         {
           "Name": "Values",
-          "Projection": 13,
+          "Projection": 5,
+          "isActive": false
+        },
+        {
+          "Name": "Values",
+          "Projection": 7,
           "isActive": false
         },
         {
@@ -516,81 +463,6 @@
         {
           "Name": "Values",
           "Projection": 1,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 5,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 3,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 7,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 4,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 6,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 8,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 9,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 10,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 16,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 18,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 15,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 19,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 17,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 14,
-          "isActive": false
-        },
-        {
-          "Name": "Values",
-          "Projection": 20,
           "isActive": false
         }
       ]
@@ -663,136 +535,6 @@
       }
     },
     {
-      "displayName": "Disponible",
-      "queryName": "select1",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "MAX(0, [Cantidad Asegurada] - [Cantidad Consumida])",
-          "Name": "Disponible"
-        }
-      }
-    },
-    {
-      "displayName": "Faltant",
-      "queryName": "select3",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "IF([Es Item], MAX(0, [Cantidad Consumida]-[Cantidad Asegurada]), 0)",
-          "Name": "Faltant"
-        }
-      }
-    },
-    {
-      "displayName": "Es Item",
-      "queryName": "select",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "ISATLEVEL([Item])",
-          "Name": "Es Item"
-        }
-      }
-    },
-    {
-      "displayName": "Faltante",
-      "queryName": "select2",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "IF([Es Item], [Faltant], EXPAND(SUM([Faltant]),ROWS)) ",
-          "Name": "Faltante"
-        }
-      }
-    },
-    {
-      "displayName": "Disponible Acumulado",
-      "queryName": "select4",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nIF (\r\n    [Es Item],\r\n    RUNNINGSUM ( [Disponible], ROWS, LOWESTPARENT ),\r\n    EXPAND ( SUM ( [Disponible] ), ROWS )\r\n)",
-          "Name": "Disponible Acumulado"
-        }
-      }
-    },
-    {
-      "displayName": "Requiere Cambio",
-      "queryName": "select6",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nVAR FaltanteInsumo =\r\n    COLLAPSE ( [Faltante], ROWS ) \r\nRETURN\r\n    PREVIOUS ( [Disponible Acumulado] ) < FaltanteInsumo -- Si con el anterior no se a cubierto todo lo requerido\r\n        || [Faltante] > 0 -- si es cualquiera de los que requiere asegurados\r\n        || (\r\n            FIRST ( [Item], 2 ) = [Item] -- Si cumple las tres, ser el primer item, tener disponible, y que el insumo requiera cambios\r\n                && [Es Item]\r\n                && FaltanteInsumo > 0\r\n        )",
-          "Name": "Requiere Cambio"
-        }
-      }
-    },
-    {
-      "displayName": "Extraído",
-      "queryName": "select7",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\nVAR FaltanteInsumo =\n    COLLAPSE ( [Faltante], ROWS ) -- este es el valor de la suma de todos los faltantes del insumo\nRETURN\n    IF (\n        [Requiere Cambio] && [Faltante] = 0, -- Solo extrae de aquellos que tienen disponible y son requeridos\n        IF (\n            [Disponible Acumulado] < FaltanteInsumo,\n            [Disponible], -- en caso de que el acumulado sea menor al requerido por todos los otros items, todo el disponible será usado\n            IF (\n                FIRST ( [Item], LOWESTPARENT ) = [Item], -- este condicional revisa si es el primer item en lista de ese insumo\n                FaltanteInsumo, -- llegados a este punto este item cumple: ser el primer item, tener disponible, hacer parte de un insumo que requiere cambio y tener disponible más de lo que requieren otros, por lo que solo se le extrae el faltante que necesiten otros\n                FaltanteInsumo - PREVIOUS ( [Disponible Acumulado] ) -- en caso de no ser el primero se puede saber cuanto hace falta simplemente restando el ultimo disponibe acumulado\n            )\n        ),\n        BLANK ()\n    )",
-          "Name": "Extraído"
-        }
-      }
-    },
-    {
-      "displayName": "Cambio Sugerido",
-      "queryName": "select8",
-      "roles": {
-        "Values": true
-      },
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nVAR CambioSugerido =\r\n    IF (\r\n        [Requiere Cambio] && [Es Item],\r\n        IF ( [Faltante] > 0, [Cantidad Consumida], [Cantidad Asegurada] - [Extraído] ),\r\n        BLANK ()\r\n    )\r\nRETURN\r\n    IF ( CambioSugerido = [Cantidad Asegurada], BLANK (), CambioSugerido )",
-          "Name": "Cambio Sugerido"
-        }
-      }
-    },
-    {
       "displayName": "Nombre Proyecto",
       "queryName": "DimProyecto.Nombre Proyecto",
       "roles": {
@@ -822,7 +564,7 @@
         "Rows": true
       },
       "sort": 1,
-      "sortOrder": 2,
+      "sortOrder": 3,
       "type": {
         "category": null,
         "underlyingType": 1
@@ -860,104 +602,31 @@
       }
     },
     {
-      "displayName": "Requiere Cambio OC",
-      "queryName": "select5",
-      "roles": {},
+      "displayName": "Item estado",
+      "queryName": "DimItems.Item estado",
+      "roles": {
+        "Rows": true
+      },
+      "sort": 1,
+      "sortOrder": 2,
       "type": {
         "category": null,
-        "underlyingType": 259
+        "underlyingType": 1
       },
       "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nVAR CambioSugeridoItem =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nRETURN\r\n    [Es OC]\r\n        && CambioSugeridoItem < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugeridoItem ) )",
-          "Name": "Requiere Cambio OC"
+        "Column": {
+          "Expression": {
+            "SourceRef": {
+              "Entity": "DimItems"
+            }
+          },
+          "Property": "Item estado"
         }
       }
     },
     {
-      "displayName": "OC Cantidad",
-      "queryName": "select9",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nVAR RequiereCambio =\r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )\r\nRETURN\r\n    IF (\r\n        RequiereCambio,\r\n        IF ( CambioSugerido < CantidadAsegurada, [Cantidad OC], BLANK () ),\r\n        BLANK ()\r\n    )",
-          "Name": "OC Cantidad"
-        }
-      }
-    },
-    {
-      "displayName": "Es OC",
-      "queryName": "select10",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "ISATLEVEL ( [Fecha OC] )",
-          "Name": "Es OC"
-        }
-      }
-    },
-    {
-      "displayName": "MaxItem",
-      "queryName": "select12",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN\r\nIF([OC con disponible?], CantidadAsegurada - CambioSugerido, BLANK())",
-          "Name": "MaxItem"
-        }
-      }
-    },
-    {
-      "displayName": "OC con disponible?",
-      "queryName": "select13",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN \r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )",
-          "Name": "OC con disponible?"
-        }
-      }
-    },
-    {
-      "displayName": "OC Item Acumulada",
-      "queryName": "select14",
-      "roles": {},
-      "type": {
-        "category": null,
-        "underlyingType": 259
-      },
-      "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "\r\nIF (\r\n    [Es OC],\r\n    RUNNINGSUM ( [OC Cantidad], ROWS, 3 ),\r\n    BLANK()\r\n)",
-          "Name": "OC Item Acumulada"
-        }
-      }
-    },
-    {
-      "displayName": "Cantidad a Cambiar",
-      "queryName": "select11",
+      "displayName": "Devoluciones",
+      "queryName": "Calculos.Devoluciones",
       "roles": {
         "Values": true
       },
@@ -966,10 +635,13 @@
         "underlyingType": 259
       },
       "expr": {
-        "NativeVisualCalculation": {
-          "Language": "dax",
-          "Expression": "IF([OC con disponible?], IF([MaxItem]<[OC Item Acumulada], MAX([MaxItem]-PREVIOUS([OC Item Acumulada]), 0), [Cantidad OC]), BLANK())",
-          "Name": "Cantidad a Cambiar"
+        "Measure": {
+          "Expression": {
+            "SourceRef": {
+              "Entity": "Calculos"
+            }
+          },
+          "Property": "Devoluciones"
         }
       }
     },
@@ -1057,9 +729,39 @@
         },
         {
           "queryRefs": [
+            "DimItems.Item estado"
+          ],
+          "identityKeys": [
+            {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DimItems"
+                  }
+                },
+                "Property": "Item estado"
+              }
+            }
+          ],
+          "isPinned": true
+        },
+        {
+          "queryRefs": [
             "FactCompras.Fecha OC"
           ],
           "isCollapsed": true,
+          "identityKeys": [
+            {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "FactCompras"
+                  }
+                },
+                "Property": "Fecha OC"
+              }
+            }
+          ],
           "isPinned": true
         }
       ],

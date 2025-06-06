@@ -8,14 +8,6 @@
 
 		annotation SummarizationSetBy = User
 
-	column SkIdFecha
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: SkIdFecha
-
-		annotation SummarizationSetBy = User
-
 	column SkIdClaseOrigen
 		dataType: int64
 		formatString: 0
@@ -49,29 +41,13 @@
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column 'Origen Documento'
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: Origen Documento
-
-		annotation SummarizationSetBy = User
-
-	column 'Origen Documento Detalle'
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: Origen Documento Detalle
-
-		annotation SummarizationSetBy = User
-
 	partition FactControlProyecto = m
 		mode: import
 		source =
 				let
 				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
 				    ADP_DTM_FACT_ControlProyecto = Source{[Schema="ADP_DTM_FACT",Item="ControlProyecto"]}[Data],
-				    ElegirColumnas = Table.SelectColumns(ADP_DTM_FACT_ControlProyecto,{"SkIdProyecto", "SkIdFecha", "SkIdClaseOrigen", "SkIdInsumo", "SkIdItems", "Cantidad", "Origen Documento", "Origen Documento Detalle"}),
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_FACT_ControlProyecto,{"SkIdProyecto", "SkIdClaseOrigen", "SkIdInsumo", "SkIdItems", "Cantidad"}),
 				    #"Cantidad<>0" = Table.SelectRows(ElegirColumnas, each ([Cantidad] <> 0))
 				in
 				    #"Cantidad<>0"

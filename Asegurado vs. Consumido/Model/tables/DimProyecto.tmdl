@@ -8,14 +8,6 @@
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Codigo Proyecto'
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: Codigo Proyecto
-
-		annotation SummarizationSetBy = User
-
 	column 'Nombre Proyecto'
 		dataType: string
 		summarizeBy: none
@@ -29,7 +21,7 @@
 				let
 				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
 				    ADP_DTM_DIM_Proyecto = Source{[Schema="ADP_DTM_DIM",Item="Proyecto"]}[Data],
-				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Proyecto,{"SkIdProyecto", "Codigo Proyecto", "Nombre Proyecto"})
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Proyecto,{"SkIdProyecto", "Nombre Proyecto"})
 				in
 				    ElegirColumnas
 

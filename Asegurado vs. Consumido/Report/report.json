@@ -1,12 +1,12 @@
 {
   "id": 52520758,
   "layoutOptimization": 0,
-  "pods": [],
   "publicCustomVisuals": [],
   "reportId": 9036119,
   "resourcePackages": [
     {
       "resourcePackage": {
+        "disabled": false,
         "id": 67689824,
         "items": [
           {
@@ -19,7 +19,6 @@
           }
         ],
         "name": "RegisteredResources",
-        "reportId": 9036119,
         "type": 1
       }
     },
@@ -37,7 +36,6 @@
           }
         ],
         "name": "SharedResources",
-        "reportId": 9036119,
         "type": 2
       }
     }

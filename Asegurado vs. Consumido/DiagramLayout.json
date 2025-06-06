@@ -10,86 +10,78 @@
       "nodes": [
         {
           "location": {
-            "x": 0,
-            "y": 0
-          },
-          "nodeIndex": "DimControlClaseOrigen",
-          "nodeLineageTag": "5b296306-0683-46aa-b11c-e1d244e55ba0",
-          "size": {
-            "height": 200,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 585.05201148011554,
-            "y": 0
+            "x": 504.327817261992,
+            "y": 15.696371097968434
           },
           "nodeIndex": "DimInsumo",
           "nodeLineageTag": "daa5aa0e-524e-4e25-a57c-368082d4b3d7",
           "size": {
-            "height": 224,
+            "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 2,
+          "expandedHeight": 224
         },
         {
           "location": {
-            "x": 823.05201148011543,
-            "y": 0
+            "x": 775.96289818621017,
+            "y": 65.027823120154935
           },
           "nodeIndex": "DimItems",
           "nodeLineageTag": "df8c157c-67e9-4968-95eb-8273d8b3933a",
           "size": {
-            "height": 176,
+            "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 3,
+          "expandedHeight": 176
         },
         {
           "location": {
-            "x": 293,
-            "y": 0
+            "x": 259.36491907578187,
+            "y": 22.423387282812044
           },
           "nodeIndex": "DimProyecto",
           "nodeLineageTag": "26c501e4-b5f2-4491-aa7f-18ed92fcd733",
           "size": {
-            "height": 152,
+            "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 4,
+          "expandedHeight": 152
         },
         {
           "location": {
-            "x": 484.90321310595323,
-            "y": 391.18000082440244
+            "x": 712.50059402649549,
+            "y": 406.87637192237082
           },
           "nodeIndex": "FactCompras",
           "nodeLineageTag": "1dab78a4-23cc-4865-ad10-81796fab3084",
           "size": {
-            "height": 296,
+            "height": 200,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 5,
+          "expandedHeight": 296
         },
         {
           "location": {
-            "x": 141.16616299872226,
-            "y": 379.22450340185583
+            "x": 168.23027513919286,
+            "y": 428.8011161190438
           },
           "nodeIndex": "FactControlProyecto",
           "nodeLineageTag": "ae97ccec-b9dc-4b0e-922d-64ca227d4dbe",
           "size": {
-            "height": 272,
+            "height": 176,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 6,
+          "expandedHeight": 272
         },
         {
           "location": {
-            "x": 968.05201148011543,
-            "y": 203.09000041220122
+            "x": 0,
+            "y": 9.1277004158770154
           },
           "nodeIndex": "Calculos",
           "nodeLineageTag": "0e40f083-c8aa-46cf-a460-b18e3cf3baa0",
@@ -97,47 +89,36 @@
             "height": 72,
             "width": 234
           },
-          "zIndex": 0,
+          "zIndex": 7,
           "expandedHeight": 200
         },
         {
           "location": {
-            "x": 803.05201148011543,
-            "y": 385.09000041220122
+            "x": 964.13548084058027,
+            "y": 231.79342642697029
           },
           "nodeIndex": "FactDevoluciones",
           "nodeLineageTag": "56739157-bca6-49be-8b8d-f17ce6d27e2c",
           "size": {
-            "height": 248,
+            "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 10,
+          "expandedHeight": 248
         },
         {
           "location": {
-            "x": 1252.0520114801154,
-            "y": 267.59000041220122
+            "x": 425.88225079246627,
+            "y": 454.73334896305641
           },
           "nodeIndex": "FactAjustes",
           "nodeLineageTag": "139409a3-dd51-4acb-a734-69a9061c6fa8",
           "size": {
-            "height": 152,
+            "height": 128,
             "width": 234
           },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 1536.0520114801154,
-            "y": 193.59000041220122
-          },
-          "nodeIndex": "DimControlClaseOrigen (2)",
-          "nodeLineageTag": "2111fe6d-d0db-4667-aecf-d4b7bf513490",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 0
+          "zIndex": 8,
+          "expandedHeight": 152
         }
       ],
       "name": "All tables",

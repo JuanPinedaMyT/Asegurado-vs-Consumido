@@ -1,14 +1,14 @@
 {
-  "name": "4916916deeb23d580c85",
+  "name": "29f167a134e3857eb8b5",
   "layouts": [
     {
       "id": 0,
       "position": {
-        "x": 15.01466275659824,
-        "y": 115.42521994134897,
+        "x": 7.2141706924315621,
+        "y": 115.426731078905,
         "z": 5000,
-        "width": 1264.9853372434018,
-        "height": 604.3401759530791,
+        "width": 1264.5410628019324,
+        "height": 603.92914653784214,
         "tabOrder": 5000
       }
     }
@@ -30,6 +30,10 @@
           "active": true
         },
         {
+          "queryRef": "DimItems.Item estado",
+          "active": true
+        },
+        {
           "queryRef": "FactCompras.Fecha OC",
           "active": true
         }
@@ -39,68 +43,13 @@
           "queryRef": "Calculos.Cantidad OC"
         },
         {
+          "queryRef": "Calculos.Devoluciones"
+        },
+        {
           "queryRef": "Cálculos.Cantidad Asegurada"
         },
         {
           "queryRef": "Cálculos.Cantidad Consumida"
-        },
-        {
-          "queryRef": "select",
-          "hidden": true
-        },
-        {
-          "queryRef": "select1",
-          "hidden": true
-        },
-        {
-          "queryRef": "select4",
-          "hidden": true
-        },
-        {
-          "queryRef": "select3",
-          "hidden": true
-        },
-        {
-          "queryRef": "select2",
-          "hidden": true
-        },
-        {
-          "queryRef": "select6",
-          "hidden": true
-        },
-        {
-          "queryRef": "select7",
-          "hidden": true
-        },
-        {
-          "queryRef": "select8"
-        },
-        {
-          "queryRef": "select10",
-          "hidden": true
-        },
-        {
-          "queryRef": "select13",
-          "hidden": true
-        },
-        {
-          "queryRef": "select9",
-          "hidden": true
-        },
-        {
-          "queryRef": "select14",
-          "hidden": true
-        },
-        {
-          "queryRef": "select12",
-          "hidden": true
-        },
-        {
-          "queryRef": "select5",
-          "hidden": true
-        },
-        {
-          "queryRef": "select11"
         }
       ]
     },
@@ -171,78 +120,6 @@
           "NativeReferenceName": "Cantidad Asegurada"
         },
         {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "MAX(0, [Cantidad Asegurada] - [Cantidad Consumida])",
-            "Name": "Disponible"
-          },
-          "Name": "select1",
-          "NativeReferenceName": "Disponible"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "IF([Es Item], MAX(0, [Cantidad Consumida]-[Cantidad Asegurada]), 0)",
-            "Name": "Faltant"
-          },
-          "Name": "select3",
-          "NativeReferenceName": "Faltant"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "ISATLEVEL([Item])",
-            "Name": "Es Item"
-          },
-          "Name": "select",
-          "NativeReferenceName": "Es Item"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "IF([Es Item], [Faltant], EXPAND(SUM([Faltant]),ROWS)) ",
-            "Name": "Faltante"
-          },
-          "Name": "select2",
-          "NativeReferenceName": "Faltante"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nIF (\r\n    [Es Item],\r\n    RUNNINGSUM ( [Disponible], ROWS, LOWESTPARENT ),\r\n    EXPAND ( SUM ( [Disponible] ), ROWS )\r\n)",
-            "Name": "Disponible Acumulado"
-          },
-          "Name": "select4",
-          "NativeReferenceName": "Disponible Acumulado"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nVAR FaltanteInsumo =\r\n    COLLAPSE ( [Faltante], ROWS ) \r\nRETURN\r\n    PREVIOUS ( [Disponible Acumulado] ) < FaltanteInsumo -- Si con el anterior no se a cubierto todo lo requerido\r\n        || [Faltante] > 0 -- si es cualquiera de los que requiere asegurados\r\n        || (\r\n            FIRST ( [Item], 2 ) = [Item] -- Si cumple las tres, ser el primer item, tener disponible, y que el insumo requiera cambios\r\n                && [Es Item]\r\n                && FaltanteInsumo > 0\r\n        )",
-            "Name": "Requiere Cambio"
-          },
-          "Name": "select6",
-          "NativeReferenceName": "Requiere Cambio"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\nVAR FaltanteInsumo =\n    COLLAPSE ( [Faltante], ROWS ) -- este es el valor de la suma de todos los faltantes del insumo\nRETURN\n    IF (\n        [Requiere Cambio] && [Faltante] = 0, -- Solo extrae de aquellos que tienen disponible y son requeridos\n        IF (\n            [Disponible Acumulado] < FaltanteInsumo,\n            [Disponible], -- en caso de que el acumulado sea menor al requerido por todos los otros items, todo el disponible será usado\n            IF (\n                FIRST ( [Item], LOWESTPARENT ) = [Item], -- este condicional revisa si es el primer item en lista de ese insumo\n                FaltanteInsumo, -- llegados a este punto este item cumple: ser el primer item, tener disponible, hacer parte de un insumo que requiere cambio y tener disponible más de lo que requieren otros, por lo que solo se le extrae el faltante que necesiten otros\n                FaltanteInsumo - PREVIOUS ( [Disponible Acumulado] ) -- en caso de no ser el primero se puede saber cuanto hace falta simplemente restando el ultimo disponibe acumulado\n            )\n        ),\n        BLANK ()\n    )",
-            "Name": "Extraído"
-          },
-          "Name": "select7",
-          "NativeReferenceName": "Extraído"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nVAR CambioSugerido =\r\n    IF (\r\n        [Requiere Cambio] && [Es Item],\r\n        IF ( [Faltante] > 0, [Cantidad Consumida], [Cantidad Asegurada] - [Extraído] ),\r\n        BLANK ()\r\n    )\r\nRETURN\r\n    IF ( CambioSugerido = [Cantidad Asegurada], BLANK (), CambioSugerido )",
-            "Name": "Cambio Sugerido"
-          },
-          "Name": "select8",
-          "NativeReferenceName": "Cambio Sugerido"
-        },
-        {
           "Column": {
             "Expression": {
               "SourceRef": {
@@ -279,67 +156,28 @@
           "NativeReferenceName": "Cantidad OC"
         },
         {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nVAR CambioSugeridoItem =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nRETURN\r\n    [Es OC]\r\n        && CambioSugeridoItem < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugeridoItem ) )",
-            "Name": "Requiere Cambio OC"
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d"
+              }
+            },
+            "Property": "Item estado"
           },
-          "Name": "select5",
-          "NativeReferenceName": "Requiere Cambio OC"
+          "Name": "DimItems.Item estado",
+          "NativeReferenceName": "Item estado"
         },
         {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nVAR RequiereCambio =\r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )\r\nRETURN\r\n    IF (\r\n        RequiereCambio,\r\n        IF ( CambioSugerido < CantidadAsegurada, [Cantidad OC], BLANK () ),\r\n        BLANK ()\r\n    )",
-            "Name": "OC Cantidad"
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Devoluciones"
           },
-          "Name": "select9",
-          "NativeReferenceName": "OC Cantidad"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "ISATLEVEL ( [Fecha OC] )",
-            "Name": "Es OC"
-          },
-          "Name": "select10",
-          "NativeReferenceName": "Es OC"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN\r\nIF([OC con disponible?], CantidadAsegurada - CambioSugerido, BLANK())",
-            "Name": "MaxItem"
-          },
-          "Name": "select12",
-          "NativeReferenceName": "MaxItem"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN \r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )",
-            "Name": "OC con disponible?"
-          },
-          "Name": "select13",
-          "NativeReferenceName": "OC con disponible?"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "\r\nIF (\r\n    [Es OC],\r\n    RUNNINGSUM ( [OC Cantidad], ROWS, 3 ),\r\n    BLANK()\r\n)",
-            "Name": "OC Item Acumulada"
-          },
-          "Name": "select14",
-          "NativeReferenceName": "OC Item Acumulada"
-        },
-        {
-          "NativeVisualCalculation": {
-            "Language": "dax",
-            "Expression": "IF([OC con disponible?], IF([MaxItem]<[OC Item Acumulada], MAX([MaxItem]-PREVIOUS([OC Item Acumulada]), 0), [Cantidad OC]), BLANK())",
-            "Name": "Cantidad a Cambiar"
-          },
-          "Name": "select11",
-          "NativeReferenceName": "Cantidad a Cambiar"
+          "Name": "Calculos.Devoluciones",
+          "NativeReferenceName": "Devoluciones"
         },
         {
           "Column": {
@@ -387,6 +225,19 @@
             "Column": {
               "Expression": {
                 "SourceRef": {
+                  "Source": "d"
+                }
+              },
+              "Property": "Item estado"
+            }
+          }
+        },
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
                   "Source": "f"
                 }
               },
@@ -396,7 +247,6 @@
         }
       ]
     },
-    "autoSelectVisualType": false,
     "expansionStates": [
       {
         "roles": [
@@ -459,9 +309,39 @@
           },
           {
             "queryRefs": [
+              "DimItems.Item estado"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimItems"
+                    }
+                  },
+                  "Property": "Item estado"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
               "FactCompras.Fecha OC"
             ],
             "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCompras"
+                    }
+                  },
+                  "Property": "Fecha OC"
+                }
+              }
+            ],
             "isPinned": true
           }
         ],
@@ -657,34 +537,6 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "78D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "select8"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "86D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "select4"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
                   "Value": "82D"
                 }
               }
@@ -699,7 +551,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "68D"
+                  "Value": "81.9688824955723D"
                 }
               }
             }

@@ -22,27 +22,6 @@
 
 		annotation SummarizationSetBy = Automatic
 
-	column Unidad
-		dataType: string
-		summarizeBy: none
-		sourceColumn: Unidad
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Descripcion Unidad'
-		dataType: string
-		summarizeBy: none
-		sourceColumn: Descripcion Unidad
-
-		annotation SummarizationSetBy = Automatic
-
-	column Estado
-		dataType: string
-		summarizeBy: none
-		sourceColumn: Estado
-
-		annotation SummarizationSetBy = Automatic
-
 	column 'Insumo Código Descripción' = CONCATENATE(DimInsumo[Codigo Insumo] , CONCATENATE(" " , DimInsumo[Insumo Descripcion]))
 		summarizeBy: none
 
@@ -54,7 +33,7 @@
 				let
 				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
 				    ADP_DTM_DIM_Insumo = Source{[Schema="ADP_DTM_DIM",Item="Insumo"]}[Data],
-				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Insumo,{"SkIdInsumo", "Codigo Insumo", "Insumo Descripcion", "Unidad", "Descripcion Unidad", "Estado"})
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Insumo,{"SkIdInsumo", "Codigo Insumo", "Insumo Descripcion"})
 				in
 				    ElegirColumnas
 

@@ -31,10 +31,10 @@
 				let
 				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
 				    ADP_DTM_FACT_InventarioResumido = Source{[Schema="ADP_DTM_FACT",Item="InventarioResumido"]}[Data],
-				    #"Filas filtradas" = Table.SelectRows(ADP_DTM_FACT_InventarioResumido, each ([Tipo] = "AI") and ([Documento] <> -10)),
-				    #"Otras columnas quitadas" = Table.SelectColumns(#"Filas filtradas",{"SkIdProyecto", "SkIdInsumo", "Cantidad"})
+				    FiltrarFilas = Table.SelectRows(ADP_DTM_FACT_InventarioResumido, each ([Tipo] = "AI") and ([Documento] <> -10)),
+				    ElegirColumnas = Table.SelectColumns(FiltrarFilas,{"SkIdProyecto", "SkIdInsumo", "Cantidad"})
 				in
-				    #"Otras columnas quitadas"
+				    ElegirColumnas
 
 	annotation PBI_NavigationStepName = Navigation
 

@@ -22,22 +22,17 @@
 
 		annotation SummarizationSetBy = User
 
-	column 'Item N° Descripción' = CONCATENATE(DimItems[Item No] , CONCATENATE(" - " , DimItems[Item Descripcion]))
-		summarizeBy: none
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Unidad Medida'
-		dataType: string
-		summarizeBy: none
-		sourceColumn: Unidad Medida
-
-		annotation SummarizationSetBy = Automatic
-
 	column 'Item estado'
 		dataType: string
 		summarizeBy: none
 		sourceColumn: Item estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column SubCapitulo
+		dataType: string
+		summarizeBy: none
+		sourceColumn: SubCapitulo
 
 		annotation SummarizationSetBy = Automatic
 
@@ -54,11 +49,10 @@
 				let
 				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
 				    ADP_DTM_DIM_Items = Source{[Schema="ADP_DTM_DIM",Item="Items"]}[Data],
-				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Items,{"SkIdItems", "Item No", "SubCapitulo", "Item Descripcion", "Unidad Medida", "Item estado"}),
-				    #"Inserted Merged Column" = Table.AddColumn(ElegirColumnas, "Merged", each Text.Combine({[Item No], [Item Descripcion]}, " - "), type text),
-				    #"Merged Columns" = Table.CombineColumns(#"Inserted Merged Column",{"Merged", "SubCapitulo"},Combiner.CombineTextByDelimiter("  ", QuoteStyle.None),"Item")
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Items,{"SkIdItems", "Item No", "SubCapitulo", "Item Descripcion", "Item estado"}),
+				    Item = Table.AddColumn(ElegirColumnas, "Item", each Text.Combine({[Item No], [Item Descripcion]}, " - "), type text)
 				in
-				    #"Merged Columns"
+				    Item
 
 	annotation PBI_NavigationStepName = Navigation
 

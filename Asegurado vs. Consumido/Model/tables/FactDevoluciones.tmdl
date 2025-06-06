@@ -1,34 +1,10 @@
 ﻿table FactDevoluciones
 
-	column SkIdProyecto
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: SkIdProyecto
-
-		annotation SummarizationSetBy = Automatic
-
-	column SkIdInsumo
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: SkIdInsumo
-
-		annotation SummarizationSetBy = Automatic
-
 	column 'Cantidad Devuelta'
 		dataType: double
 		formatString: 0
 		summarizeBy: none
 		sourceColumn: Cantidad Devuelta
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Compra No'
-		dataType: int64
-		formatString: 0
-		summarizeBy: none
-		sourceColumn: Compra No
 
 		annotation SummarizationSetBy = Automatic
 
@@ -45,12 +21,13 @@
 				let
 				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
 				    ADP_DTM_FACT_Devoluciones = Source{[Schema="ADP_DTM_FACT",Item="Devoluciones"]}[Data],
-				    #"Otras columnas quitadas" = Table.SelectColumns(ADP_DTM_FACT_Devoluciones,{"SkIdProyecto", "SkIdInsumo", "Devolucion Numero", "Devolucion Factura", "Cantidad Devuelta", "Compra No"}),
-				    #"Columna combinada insertada" = Table.AddColumn(#"Otras columnas quitadas", "CompraInsumo", each Text.Combine({Text.From([Compra No], "es-CO"), Text.From([SkIdInsumo], "es-CO")}, ":"), type text),
-				    #"Filas agrupadas" = Table.Group(#"Columna combinada insertada", {"SkIdProyecto", "SkIdInsumo", "Compra No", "CompraInsumo"}, {{"Cantidad Devuelta", each List.Sum([Cantidad Devuelta]), type nullable number}}),
-				    #"Filas filtradas" = Table.SelectRows(#"Filas agrupadas", each ([Cantidad Devuelta] <> 0))
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_FACT_Devoluciones,{"SkIdProyecto", "SkIdInsumo", "Cantidad Devuelta", "Compra No"}),
+				    CompraInsumo = Table.AddColumn(ElegirColumnas, "CompraInsumo", each Text.Combine({Text.From([Compra No], "es-CO"), Text.From([SkIdInsumo], "es-CO")}, ":"), type text),
+				    Agrupar = Table.Group(CompraInsumo, {"SkIdProyecto", "SkIdInsumo", "Compra No", "CompraInsumo"}, {{"Cantidad Devuelta", each List.Sum([Cantidad Devuelta]), type nullable number}}),
+				    QuitarCeros = Table.SelectRows(Agrupar, each ([Cantidad Devuelta] <> 0)),
+				    ColumnasFinales = Table.SelectColumns(QuitarCeros,{"CompraInsumo", "Cantidad Devuelta"})
 				in
-				    #"Filas filtradas"
+				    ColumnasFinales
 
 	annotation PBI_NavigationStepName = Navigation
 

@@ -8,20 +8,18 @@
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBIDesktopVersion = 2.138.1452.0 (24.11)
+annotation PBIDesktopVersion = 2.143.1378.0 (25.05)+4e1de9c957866bc5336e0d250838314aa54ff3a8
 
-annotation PBI_QueryOrder = ["DimInsumo","DimItems","DimControlClaseOrigen","FactCompras","FactControlProyecto","DimProyecto","FactDevoluciones","FactAjustes","DimControlClaseOrigen (2)"]
+annotation PBI_QueryOrder = ["DimInsumo","DimItems","FactCompras","FactControlProyecto","DimProyecto","FactDevoluciones","FactAjustes"]
 
 ref table DimInsumo
 ref table DimItems
-ref table DimControlClaseOrigen
 ref table FactCompras
 ref table FactControlProyecto
 ref table DimProyecto
 ref table Calculos
 ref table FactDevoluciones
 ref table FactAjustes
-ref table 'DimControlClaseOrigen (2)'
 
 ref cultureInfo en-US
 
