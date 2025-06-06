@@ -1,0 +1,614 @@
+{
+  "name": "29f167a134e3857eb8b5",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 7.2141706924315621,
+        "y": 115.426731078905,
+        "z": 5000,
+        "width": 1264.5410628019324,
+        "height": 603.92914653784214,
+        "tabOrder": 5000
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "pivotTable",
+    "projections": {
+      "Rows": [
+        {
+          "queryRef": "DimProyecto.Nombre Proyecto",
+          "active": true
+        },
+        {
+          "queryRef": "DimInsumo.Insumo Código Descripción",
+          "active": true
+        },
+        {
+          "queryRef": "DimItems.Item",
+          "active": true
+        },
+        {
+          "queryRef": "DimItems.Item estado",
+          "active": true
+        },
+        {
+          "queryRef": "FactCompras.Fecha OC",
+          "active": true
+        }
+      ],
+      "Values": [
+        {
+          "queryRef": "Calculos.Cantidad OC"
+        },
+        {
+          "queryRef": "Calculos.Devoluciones"
+        },
+        {
+          "queryRef": "Cálculos.Cantidad Asegurada"
+        },
+        {
+          "queryRef": "Cálculos.Cantidad Consumida"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "d1",
+          "Entity": "DimInsumo",
+          "Type": 0
+        },
+        {
+          "Name": "c",
+          "Entity": "Calculos",
+          "Type": 0
+        },
+        {
+          "Name": "d2",
+          "Entity": "DimProyecto",
+          "Type": 0
+        },
+        {
+          "Name": "f",
+          "Entity": "FactCompras",
+          "Type": 0
+        },
+        {
+          "Name": "d",
+          "Entity": "DimItems",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d1"
+              }
+            },
+            "Property": "Insumo Código Descripción"
+          },
+          "Name": "DimInsumo.Insumo Código Descripción",
+          "NativeReferenceName": "Insumo Código Descripción"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Cantidad Consumida"
+          },
+          "Name": "Cálculos.Cantidad Consumida",
+          "NativeReferenceName": "Cantidad Consumida"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Cantidad Asegurada"
+          },
+          "Name": "Cálculos.Cantidad Asegurada",
+          "NativeReferenceName": "Cantidad Asegurada"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d2"
+              }
+            },
+            "Property": "Nombre Proyecto"
+          },
+          "Name": "DimProyecto.Nombre Proyecto",
+          "NativeReferenceName": "Nombre Proyecto"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Fecha OC"
+          },
+          "Name": "FactCompras.Fecha OC",
+          "NativeReferenceName": "Fecha OC"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Cantidad OC"
+          },
+          "Name": "Calculos.Cantidad OC",
+          "NativeReferenceName": "Cantidad OC"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d"
+              }
+            },
+            "Property": "Item estado"
+          },
+          "Name": "DimItems.Item estado",
+          "NativeReferenceName": "Item estado"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Devoluciones"
+          },
+          "Name": "Calculos.Devoluciones",
+          "NativeReferenceName": "Devoluciones"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d"
+              }
+            },
+            "Property": "Item"
+          },
+          "Name": "DimItems.Item",
+          "NativeReferenceName": "Item"
+        }
+      ],
+      "OrderBy": [
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "d2"
+                }
+              },
+              "Property": "Nombre Proyecto"
+            }
+          }
+        },
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "d1"
+                }
+              },
+              "Property": "Insumo Código Descripción"
+            }
+          }
+        },
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "d"
+                }
+              },
+              "Property": "Item estado"
+            }
+          }
+        },
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "f"
+                }
+              },
+              "Property": "Fecha OC"
+            }
+          }
+        }
+      ]
+    },
+    "expansionStates": [
+      {
+        "roles": [
+          "Rows"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "DimProyecto.Nombre Proyecto"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimProyecto"
+                    }
+                  },
+                  "Property": "Nombre Proyecto"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "DimInsumo.Insumo Código Descripción"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimInsumo"
+                    }
+                  },
+                  "Property": "Insumo Código Descripción"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "DimItems.Item"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimItems"
+                    }
+                  },
+                  "Property": "Item"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "DimItems.Item estado"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimItems"
+                    }
+                  },
+                  "Property": "Item estado"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "FactCompras.Fecha OC"
+            ],
+            "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactCompras"
+                    }
+                  },
+                  "Property": "Fecha OC"
+                }
+              }
+            ],
+            "isPinned": true
+          }
+        ],
+        "root": {
+          "identityValues": null
+        }
+      }
+    ],
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
+                    }
+                  }
+                }
+              }
+            },
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#A0282A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTotals": [
+        {
+          "properties": {
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "perRowLevel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "levelSubtotalEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimInsumo.Insumo Código Descripción"
+          }
+        },
+        {
+          "properties": {
+            "levelSubtotalEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimProyecto.Nombre Proyecto"
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "392.9070511730041D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimInsumo.Insumo Código Descripción"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "102.64531956794454D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Cantidad Asegurada"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "92.89164277023409D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Asegurado"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "87.91133875319335D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Cantidad Consumida1"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "346.6714796671877D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimProyecto.Nombre Proyecto"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "82D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Cantidad Consumida"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "68D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Calculos.Cantidad OC"
+          }
+        }
+      ]
+    },
+    "vcObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Minimal'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

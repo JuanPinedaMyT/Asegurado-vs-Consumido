@@ -1,0 +1,762 @@
+{
+  "name": "4916916deeb23d580c85",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 15.01466275659824,
+        "y": 115.42521994134897,
+        "z": 5000,
+        "width": 1264.9853372434018,
+        "height": 604.3401759530791,
+        "tabOrder": 5000
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "pivotTable",
+    "projections": {
+      "Rows": [
+        {
+          "queryRef": "DimProyecto.Nombre Proyecto",
+          "active": true
+        },
+        {
+          "queryRef": "DimInsumo.Insumo Código Descripción",
+          "active": true
+        },
+        {
+          "queryRef": "DimItems.Item",
+          "active": true
+        },
+        {
+          "queryRef": "FactCompras.Fecha OC",
+          "active": true
+        }
+      ],
+      "Values": [
+        {
+          "queryRef": "Calculos.Cantidad OC"
+        },
+        {
+          "queryRef": "Cálculos.Cantidad Asegurada"
+        },
+        {
+          "queryRef": "Cálculos.Cantidad Consumida"
+        },
+        {
+          "queryRef": "select",
+          "hidden": true
+        },
+        {
+          "queryRef": "select1",
+          "hidden": true
+        },
+        {
+          "queryRef": "select4",
+          "hidden": true
+        },
+        {
+          "queryRef": "select3",
+          "hidden": true
+        },
+        {
+          "queryRef": "select2",
+          "hidden": true
+        },
+        {
+          "queryRef": "select6",
+          "hidden": true
+        },
+        {
+          "queryRef": "select7",
+          "hidden": true
+        },
+        {
+          "queryRef": "select8"
+        },
+        {
+          "queryRef": "select10",
+          "hidden": true
+        },
+        {
+          "queryRef": "select13",
+          "hidden": true
+        },
+        {
+          "queryRef": "select9",
+          "hidden": true
+        },
+        {
+          "queryRef": "select14",
+          "hidden": true
+        },
+        {
+          "queryRef": "select12",
+          "hidden": true
+        },
+        {
+          "queryRef": "select5",
+          "hidden": true
+        },
+        {
+          "queryRef": "select11"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "d1",
+          "Entity": "DimInsumo",
+          "Type": 0
+        },
+        {
+          "Name": "c",
+          "Entity": "Calculos",
+          "Type": 0
+        },
+        {
+          "Name": "d2",
+          "Entity": "DimProyecto",
+          "Type": 0
+        },
+        {
+          "Name": "f",
+          "Entity": "FactCompras",
+          "Type": 0
+        },
+        {
+          "Name": "d",
+          "Entity": "DimItems",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d1"
+              }
+            },
+            "Property": "Insumo Código Descripción"
+          },
+          "Name": "DimInsumo.Insumo Código Descripción",
+          "NativeReferenceName": "Insumo Código Descripción"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Cantidad Consumida"
+          },
+          "Name": "Cálculos.Cantidad Consumida",
+          "NativeReferenceName": "Cantidad Consumida"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Cantidad Asegurada"
+          },
+          "Name": "Cálculos.Cantidad Asegurada",
+          "NativeReferenceName": "Cantidad Asegurada"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "MAX(0, [Cantidad Asegurada] - [Cantidad Consumida])",
+            "Name": "Disponible"
+          },
+          "Name": "select1",
+          "NativeReferenceName": "Disponible"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "IF([Es Item], MAX(0, [Cantidad Consumida]-[Cantidad Asegurada]), 0)",
+            "Name": "Faltant"
+          },
+          "Name": "select3",
+          "NativeReferenceName": "Faltant"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "ISATLEVEL([Item])",
+            "Name": "Es Item"
+          },
+          "Name": "select",
+          "NativeReferenceName": "Es Item"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "IF([Es Item], [Faltant], EXPAND(SUM([Faltant]),ROWS)) ",
+            "Name": "Faltante"
+          },
+          "Name": "select2",
+          "NativeReferenceName": "Faltante"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nIF (\r\n    [Es Item],\r\n    RUNNINGSUM ( [Disponible], ROWS, LOWESTPARENT ),\r\n    EXPAND ( SUM ( [Disponible] ), ROWS )\r\n)",
+            "Name": "Disponible Acumulado"
+          },
+          "Name": "select4",
+          "NativeReferenceName": "Disponible Acumulado"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nVAR FaltanteInsumo =\r\n    COLLAPSE ( [Faltante], ROWS ) \r\nRETURN\r\n    PREVIOUS ( [Disponible Acumulado] ) < FaltanteInsumo -- Si con el anterior no se a cubierto todo lo requerido\r\n        || [Faltante] > 0 -- si es cualquiera de los que requiere asegurados\r\n        || (\r\n            FIRST ( [Item], 2 ) = [Item] -- Si cumple las tres, ser el primer item, tener disponible, y que el insumo requiera cambios\r\n                && [Es Item]\r\n                && FaltanteInsumo > 0\r\n        )",
+            "Name": "Requiere Cambio"
+          },
+          "Name": "select6",
+          "NativeReferenceName": "Requiere Cambio"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\nVAR FaltanteInsumo =\n    COLLAPSE ( [Faltante], ROWS ) -- este es el valor de la suma de todos los faltantes del insumo\nRETURN\n    IF (\n        [Requiere Cambio] && [Faltante] = 0, -- Solo extrae de aquellos que tienen disponible y son requeridos\n        IF (\n            [Disponible Acumulado] < FaltanteInsumo,\n            [Disponible], -- en caso de que el acumulado sea menor al requerido por todos los otros items, todo el disponible será usado\n            IF (\n                FIRST ( [Item], LOWESTPARENT ) = [Item], -- este condicional revisa si es el primer item en lista de ese insumo\n                FaltanteInsumo, -- llegados a este punto este item cumple: ser el primer item, tener disponible, hacer parte de un insumo que requiere cambio y tener disponible más de lo que requieren otros, por lo que solo se le extrae el faltante que necesiten otros\n                FaltanteInsumo - PREVIOUS ( [Disponible Acumulado] ) -- en caso de no ser el primero se puede saber cuanto hace falta simplemente restando el ultimo disponibe acumulado\n            )\n        ),\n        BLANK ()\n    )",
+            "Name": "Extraído"
+          },
+          "Name": "select7",
+          "NativeReferenceName": "Extraído"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nVAR CambioSugerido =\r\n    IF (\r\n        [Requiere Cambio] && [Es Item],\r\n        IF ( [Faltante] > 0, [Cantidad Consumida], [Cantidad Asegurada] - [Extraído] ),\r\n        BLANK ()\r\n    )\r\nRETURN\r\n    IF ( CambioSugerido = [Cantidad Asegurada], BLANK (), CambioSugerido )",
+            "Name": "Cambio Sugerido"
+          },
+          "Name": "select8",
+          "NativeReferenceName": "Cambio Sugerido"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d2"
+              }
+            },
+            "Property": "Nombre Proyecto"
+          },
+          "Name": "DimProyecto.Nombre Proyecto",
+          "NativeReferenceName": "Nombre Proyecto"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Fecha OC"
+          },
+          "Name": "FactCompras.Fecha OC",
+          "NativeReferenceName": "Fecha OC"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "c"
+              }
+            },
+            "Property": "Cantidad OC"
+          },
+          "Name": "Calculos.Cantidad OC",
+          "NativeReferenceName": "Cantidad OC"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nVAR CambioSugeridoItem =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nRETURN\r\n    [Es OC]\r\n        && CambioSugeridoItem < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugeridoItem ) )",
+            "Name": "Requiere Cambio OC"
+          },
+          "Name": "select5",
+          "NativeReferenceName": "Requiere Cambio OC"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nVAR RequiereCambio =\r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )\r\nRETURN\r\n    IF (\r\n        RequiereCambio,\r\n        IF ( CambioSugerido < CantidadAsegurada, [Cantidad OC], BLANK () ),\r\n        BLANK ()\r\n    )",
+            "Name": "OC Cantidad"
+          },
+          "Name": "select9",
+          "NativeReferenceName": "OC Cantidad"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "ISATLEVEL ( [Fecha OC] )",
+            "Name": "Es OC"
+          },
+          "Name": "select10",
+          "NativeReferenceName": "Es OC"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN\r\nIF([OC con disponible?], CantidadAsegurada - CambioSugerido, BLANK())",
+            "Name": "MaxItem"
+          },
+          "Name": "select12",
+          "NativeReferenceName": "MaxItem"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN \r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )",
+            "Name": "OC con disponible?"
+          },
+          "Name": "select13",
+          "NativeReferenceName": "OC con disponible?"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "\r\nIF (\r\n    [Es OC],\r\n    RUNNINGSUM ( [OC Cantidad], ROWS, 3 ),\r\n    BLANK()\r\n)",
+            "Name": "OC Item Acumulada"
+          },
+          "Name": "select14",
+          "NativeReferenceName": "OC Item Acumulada"
+        },
+        {
+          "NativeVisualCalculation": {
+            "Language": "dax",
+            "Expression": "IF([OC con disponible?], IF([MaxItem]<[OC Item Acumulada], MAX([MaxItem]-PREVIOUS([OC Item Acumulada]), 0), [Cantidad OC]), BLANK())",
+            "Name": "Cantidad a Cambiar"
+          },
+          "Name": "select11",
+          "NativeReferenceName": "Cantidad a Cambiar"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "d"
+              }
+            },
+            "Property": "Item"
+          },
+          "Name": "DimItems.Item",
+          "NativeReferenceName": "Item"
+        }
+      ],
+      "OrderBy": [
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "d2"
+                }
+              },
+              "Property": "Nombre Proyecto"
+            }
+          }
+        },
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "d1"
+                }
+              },
+              "Property": "Insumo Código Descripción"
+            }
+          }
+        },
+        {
+          "Direction": 1,
+          "Expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Source": "f"
+                }
+              },
+              "Property": "Fecha OC"
+            }
+          }
+        }
+      ]
+    },
+    "autoSelectVisualType": false,
+    "expansionStates": [
+      {
+        "roles": [
+          "Rows"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "DimProyecto.Nombre Proyecto"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimProyecto"
+                    }
+                  },
+                  "Property": "Nombre Proyecto"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "DimInsumo.Insumo Código Descripción"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimInsumo"
+                    }
+                  },
+                  "Property": "Insumo Código Descripción"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "DimItems.Item"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimItems"
+                    }
+                  },
+                  "Property": "Item"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "FactCompras.Fecha OC"
+            ],
+            "isCollapsed": true,
+            "isPinned": true
+          }
+        ],
+        "root": {
+          "identityValues": null
+        }
+      }
+    ],
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "grid": [
+        {
+          "properties": {
+            "outlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
+                    }
+                  }
+                }
+              }
+            },
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#A0282A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTotals": [
+        {
+          "properties": {
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "perRowLevel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "levelSubtotalEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimInsumo.Insumo Código Descripción"
+          }
+        },
+        {
+          "properties": {
+            "levelSubtotalEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimProyecto.Nombre Proyecto"
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "392.9070511730041D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimInsumo.Insumo Código Descripción"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "102.64531956794454D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Cantidad Asegurada"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "92.89164277023409D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Asegurado"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "87.91133875319335D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Cantidad Consumida1"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "346.6714796671877D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DimProyecto.Nombre Proyecto"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "78D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "select8"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "86D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "select4"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "82D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Cálculos.Cantidad Consumida"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "68D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Calculos.Cantidad OC"
+          }
+        }
+      ]
+    },
+    "vcObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Minimal'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+﻿table FactDevoluciones
+
+	column SkIdProyecto
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdProyecto
+
+		annotation SummarizationSetBy = Automatic
+
+	column SkIdInsumo
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdInsumo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cantidad Devuelta'
+		dataType: double
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Cantidad Devuelta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Compra No'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Compra No
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompraInsumo
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CompraInsumo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactDevoluciones = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
+				    ADP_DTM_FACT_Devoluciones = Source{[Schema="ADP_DTM_FACT",Item="Devoluciones"]}[Data],
+				    #"Otras columnas quitadas" = Table.SelectColumns(ADP_DTM_FACT_Devoluciones,{"SkIdProyecto", "SkIdInsumo", "Devolucion Numero", "Devolucion Factura", "Cantidad Devuelta", "Compra No"}),
+				    #"Columna combinada insertada" = Table.AddColumn(#"Otras columnas quitadas", "CompraInsumo", each Text.Combine({Text.From([Compra No], "es-CO"), Text.From([SkIdInsumo], "es-CO")}, ":"), type text),
+				    #"Filas agrupadas" = Table.Group(#"Columna combinada insertada", {"SkIdProyecto", "SkIdInsumo", "Compra No", "CompraInsumo"}, {{"Cantidad Devuelta", each List.Sum([Cantidad Devuelta]), type nullable number}}),
+				    #"Filas filtradas" = Table.SelectRows(#"Filas agrupadas", each ([Cantidad Devuelta] <> 0))
+				in
+				    #"Filas filtradas"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

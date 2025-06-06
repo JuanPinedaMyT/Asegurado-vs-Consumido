@@ -1,0 +1,519 @@
+{
+  "Commands": [
+    {
+      "SemanticQueryDataShapeCommand": {
+        "Query": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "d1",
+              "Entity": "DimInsumo",
+              "Type": 0
+            },
+            {
+              "Name": "c",
+              "Entity": "Calculos",
+              "Type": 0
+            },
+            {
+              "Name": "d2",
+              "Entity": "DimProyecto",
+              "Type": 0
+            },
+            {
+              "Name": "f",
+              "Entity": "FactCompras",
+              "Type": 0
+            },
+            {
+              "Name": "d",
+              "Entity": "DimItems",
+              "Type": 0
+            }
+          ],
+          "Select": [
+            {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "d1"
+                  }
+                },
+                "Property": "Insumo Código Descripción"
+              },
+              "Name": "DimInsumo.Insumo Código Descripción",
+              "NativeReferenceName": "Insumo Código Descripción"
+            },
+            {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "c"
+                  }
+                },
+                "Property": "Cantidad Consumida"
+              },
+              "Name": "Cálculos.Cantidad Consumida",
+              "NativeReferenceName": "Cantidad Consumida"
+            },
+            {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "c"
+                  }
+                },
+                "Property": "Cantidad Asegurada"
+              },
+              "Name": "Cálculos.Cantidad Asegurada",
+              "NativeReferenceName": "Cantidad Asegurada"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "MAX(0, [Cantidad Asegurada] - [Cantidad Consumida])",
+                "Name": "Disponible"
+              },
+              "Name": "select1",
+              "NativeReferenceName": "Disponible"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "IF([Es Item], MAX(0, [Cantidad Consumida]-[Cantidad Asegurada]), 0)",
+                "Name": "Faltant"
+              },
+              "Name": "select3",
+              "NativeReferenceName": "Faltant"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "ISATLEVEL([Item])",
+                "Name": "Es Item"
+              },
+              "Name": "select",
+              "NativeReferenceName": "Es Item"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "IF([Es Item], [Faltant], EXPAND(SUM([Faltant]),ROWS)) ",
+                "Name": "Faltante"
+              },
+              "Name": "select2",
+              "NativeReferenceName": "Faltante"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nIF (\r\n    [Es Item],\r\n    RUNNINGSUM ( [Disponible], ROWS, LOWESTPARENT ),\r\n    EXPAND ( SUM ( [Disponible] ), ROWS )\r\n)",
+                "Name": "Disponible Acumulado"
+              },
+              "Name": "select4",
+              "NativeReferenceName": "Disponible Acumulado"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nVAR FaltanteInsumo =\r\n    COLLAPSE ( [Faltante], ROWS ) \r\nRETURN\r\n    PREVIOUS ( [Disponible Acumulado] ) < FaltanteInsumo -- Si con el anterior no se a cubierto todo lo requerido\r\n        || [Faltante] > 0 -- si es cualquiera de los que requiere asegurados\r\n        || (\r\n            FIRST ( [Item], 2 ) = [Item] -- Si cumple las tres, ser el primer item, tener disponible, y que el insumo requiera cambios\r\n                && [Es Item]\r\n                && FaltanteInsumo > 0\r\n        )",
+                "Name": "Requiere Cambio"
+              },
+              "Name": "select6",
+              "NativeReferenceName": "Requiere Cambio"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\nVAR FaltanteInsumo =\n    COLLAPSE ( [Faltante], ROWS ) -- este es el valor de la suma de todos los faltantes del insumo\nRETURN\n    IF (\n        [Requiere Cambio] && [Faltante] = 0, -- Solo extrae de aquellos que tienen disponible y son requeridos\n        IF (\n            [Disponible Acumulado] < FaltanteInsumo,\n            [Disponible], -- en caso de que el acumulado sea menor al requerido por todos los otros items, todo el disponible será usado\n            IF (\n                FIRST ( [Item], LOWESTPARENT ) = [Item], -- este condicional revisa si es el primer item en lista de ese insumo\n                FaltanteInsumo, -- llegados a este punto este item cumple: ser el primer item, tener disponible, hacer parte de un insumo que requiere cambio y tener disponible más de lo que requieren otros, por lo que solo se le extrae el faltante que necesiten otros\n                FaltanteInsumo - PREVIOUS ( [Disponible Acumulado] ) -- en caso de no ser el primero se puede saber cuanto hace falta simplemente restando el ultimo disponibe acumulado\n            )\n        ),\n        BLANK ()\n    )",
+                "Name": "Extraído"
+              },
+              "Name": "select7",
+              "NativeReferenceName": "Extraído"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nVAR CambioSugerido =\r\n    IF (\r\n        [Requiere Cambio] && [Es Item],\r\n        IF ( [Faltante] > 0, [Cantidad Consumida], [Cantidad Asegurada] - [Extraído] ),\r\n        BLANK ()\r\n    )\r\nRETURN\r\n    IF ( CambioSugerido = [Cantidad Asegurada], BLANK (), CambioSugerido )",
+                "Name": "Cambio Sugerido"
+              },
+              "Name": "select8",
+              "NativeReferenceName": "Cambio Sugerido"
+            },
+            {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "d2"
+                  }
+                },
+                "Property": "Nombre Proyecto"
+              },
+              "Name": "DimProyecto.Nombre Proyecto",
+              "NativeReferenceName": "Nombre Proyecto"
+            },
+            {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "f"
+                  }
+                },
+                "Property": "Fecha OC"
+              },
+              "Name": "FactCompras.Fecha OC",
+              "NativeReferenceName": "Fecha OC"
+            },
+            {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "c"
+                  }
+                },
+                "Property": "Cantidad OC"
+              },
+              "Name": "Calculos.Cantidad OC",
+              "NativeReferenceName": "Cantidad OC"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nVAR CambioSugeridoItem =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nRETURN\r\n    [Es OC]\r\n        && CambioSugeridoItem < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugeridoItem ) )",
+                "Name": "Requiere Cambio OC"
+              },
+              "Name": "select5",
+              "NativeReferenceName": "Requiere Cambio OC"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nVAR RequiereCambio =\r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )\r\nRETURN\r\n    IF (\r\n        RequiereCambio,\r\n        IF ( CambioSugerido < CantidadAsegurada, [Cantidad OC], BLANK () ),\r\n        BLANK ()\r\n    )",
+                "Name": "OC Cantidad"
+              },
+              "Name": "select9",
+              "NativeReferenceName": "OC Cantidad"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "ISATLEVEL ( [Fecha OC] )",
+                "Name": "Es OC"
+              },
+              "Name": "select10",
+              "NativeReferenceName": "Es OC"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN\r\nIF([OC con disponible?], CantidadAsegurada - CambioSugerido, BLANK())",
+                "Name": "MaxItem"
+              },
+              "Name": "select12",
+              "NativeReferenceName": "MaxItem"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nVAR CambioSugerido =\r\n    COLLAPSE ( [Cambio Sugerido], ROWS )\r\nVAR CantidadAsegurada =\r\n    COLLAPSE ( [Cantidad Asegurada], ROWS )\r\nRETURN \r\n    [Es OC]\r\n        && CambioSugerido < COLLAPSE ( [Cantidad Asegurada], ROWS )\r\n        && NOT ( ISBLANK ( CambioSugerido ) )",
+                "Name": "OC con disponible?"
+              },
+              "Name": "select13",
+              "NativeReferenceName": "OC con disponible?"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "\r\nIF (\r\n    [Es OC],\r\n    RUNNINGSUM ( [OC Cantidad], ROWS, 3 ),\r\n    BLANK()\r\n)",
+                "Name": "OC Item Acumulada"
+              },
+              "Name": "select14",
+              "NativeReferenceName": "OC Item Acumulada"
+            },
+            {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "IF([OC con disponible?], IF([MaxItem]<[OC Item Acumulada], MAX([MaxItem]-PREVIOUS([OC Item Acumulada]), 0), [Cantidad OC]), BLANK())",
+                "Name": "Cantidad a Cambiar"
+              },
+              "Name": "select11",
+              "NativeReferenceName": "Cantidad a Cambiar"
+            },
+            {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Source": "d"
+                  }
+                },
+                "Property": "Item"
+              },
+              "Name": "DimItems.Item",
+              "NativeReferenceName": "Item"
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d2"
+                          }
+                        },
+                        "Property": "Nombre Proyecto"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'AMONTE T4'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "OrderBy": [
+            {
+              "Direction": 1,
+              "Expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Source": "d2"
+                    }
+                  },
+                  "Property": "Nombre Proyecto"
+                }
+              }
+            },
+            {
+              "Direction": 1,
+              "Expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Source": "d1"
+                    }
+                  },
+                  "Property": "Insumo Código Descripción"
+                }
+              }
+            },
+            {
+              "Direction": 1,
+              "Expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Source": "f"
+                    }
+                  },
+                  "Property": "Fecha OC"
+                }
+              }
+            }
+          ],
+          "VisualShape": [
+            {
+              "Name": "rows",
+              "Groups": [
+                {
+                  "Keys": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d2"
+                          }
+                        },
+                        "Property": "Nombre Proyecto"
+                      }
+                    }
+                  ],
+                  "Subtotal": true
+                },
+                {
+                  "Keys": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d1"
+                          }
+                        },
+                        "Property": "Insumo Código Descripción"
+                      }
+                    }
+                  ],
+                  "Subtotal": true
+                },
+                {
+                  "Keys": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d"
+                          }
+                        },
+                        "Property": "Item"
+                      }
+                    }
+                  ],
+                  "Subtotal": true
+                },
+                {
+                  "Keys": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "f"
+                          }
+                        },
+                        "Property": "Fecha OC"
+                      }
+                    }
+                  ],
+                  "Subtotal": true
+                }
+              ]
+            }
+          ]
+        },
+        "Binding": {
+          "Primary": {
+            "Groupings": [
+              {
+                "Projections": [
+                  11
+                ]
+              },
+              {
+                "Projections": [
+                  0
+                ]
+              },
+              {
+                "Projections": [
+                  21
+                ],
+                "Subtotal": 1
+              },
+              {
+                "Projections": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20
+                ],
+                "Subtotal": 1
+              }
+            ]
+          },
+          "DataReduction": {
+            "DataVolume": 3,
+            "Primary": {
+              "Window": {
+                "Count": 500
+              }
+            }
+          },
+          "HiddenProjections": [
+            {
+              "QueryReference": {
+                "ExpressionName": "select"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select1"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select4"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select3"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select2"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select6"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select7"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select10"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select13"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select9"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select14"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select12"
+              }
+            },
+            {
+              "QueryReference": {
+                "ExpressionName": "select5"
+              }
+            }
+          ],
+          "Version": 1
+        },
+        "ExecutionMetricsKind": 1
+      }
+    }
+  ]
+}

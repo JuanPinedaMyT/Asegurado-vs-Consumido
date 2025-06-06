@@ -1,0 +1,10 @@
+{
+  "Version": 4,
+  "ReportSettings": {
+    "QnaLsdlSharingPermission": 0
+  },
+  "QueriesSettings": {
+    "RelationshipImportEnabled": true,
+    "Version": "2.128.1039.0"
+  }
+}

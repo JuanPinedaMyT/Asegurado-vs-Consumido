@@ -1,0 +1,64 @@
+﻿table DimInsumo
+
+	column SkIdInsumo
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdInsumo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo Insumo'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Codigo Insumo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Insumo Descripcion'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Insumo Descripcion
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidad
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Unidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripcion Unidad'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Descripcion Unidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estado
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Insumo Código Descripción' = CONCATENATE(DimInsumo[Codigo Insumo] , CONCATENATE(" " , DimInsumo[Insumo Descripcion]))
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimInsumo = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
+				    ADP_DTM_DIM_Insumo = Source{[Schema="ADP_DTM_DIM",Item="Insumo"]}[Data],
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_DIM_Insumo,{"SkIdInsumo", "Codigo Insumo", "Insumo Descripcion", "Unidad", "Descripcion Unidad", "Estado"})
+				in
+				    ElegirColumnas
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

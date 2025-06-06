@@ -1,0 +1,106 @@
+﻿table FactCompras
+
+	column SkIdProyecto
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdProyecto
+
+		annotation SummarizationSetBy = User
+
+	column SkIdTercero
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdTercero
+
+		annotation SummarizationSetBy = User
+
+	column SkIdEstado
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdEstado
+
+		annotation SummarizationSetBy = User
+
+	column SkIdInsumo
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdInsumo
+
+		annotation SummarizationSetBy = User
+
+	column SkIdItems
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdItems
+
+		annotation SummarizationSetBy = User
+
+	column SkIdOrigenDelDocumento
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdOrigenDelDocumento
+
+		annotation SummarizationSetBy = User
+
+	column 'Compra No'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Compra No
+
+		annotation SummarizationSetBy = User
+
+	column 'Cantidad Comprada'
+		dataType: double
+		summarizeBy: none
+		sourceColumn: Cantidad Comprada
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Fecha
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha OC' = CONCATENATE(FactCompras[Fecha], CONCATENATE(" " , FactCompras[Compra No]))
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompraInsumo
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CompraInsumo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactCompras = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
+				    ADP_DTM_FACT_Compras = Source{[Schema="ADP_DTM_FACT",Item="Compras"]}[Data],
+				    ElegirColumnas = Table.SelectColumns(ADP_DTM_FACT_Compras,{"SkIdProyecto", "SkIdTercero", "SkIdFechaCompra", "SkIdEstado", "SkIdInsumo", "SkIdItems", "SkIdOrigenDelDocumento", "Compra No", "Cantidad Comprada"}),
+				    SepararFecha = Table.SplitColumn(Table.TransformColumnTypes(ElegirColumnas, {{"SkIdFechaCompra", type text}}, "es-CO"), "SkIdFechaCompra", Splitter.SplitTextByPositions({0, 4, 6}), {"SkIdFechaCompra.1", "SkIdFechaCompra.2", "SkIdFechaCompra.3"}),
+				    CombinarFecha = Table.CombineColumns(SepararFecha,{"SkIdFechaCompra.3", "SkIdFechaCompra.2", "SkIdFechaCompra.1"},Combiner.CombineTextByDelimiter("/", QuoteStyle.None),"Fecha"),
+				    SepararFecha2 = Table.SplitColumn(CombinarFecha, "Fecha", Splitter.SplitTextByPositions({0, 2, 6}), {"Fecha.1", "Fecha.2", "Fecha.3"}),
+				    ReordenarFormato = Table.CombineColumns(SepararFecha2,{"Fecha.3", "Fecha.2", "Fecha.1"},Combiner.CombineTextByDelimiter("", QuoteStyle.None),"Fecha"),
+				    CompraInsumo = Table.AddColumn(ReordenarFormato, "CompraInsumo", each Text.Combine({Text.From([Compra No], "es-CO"), Text.From([SkIdInsumo], "es-CO")}, ":"), type text),
+				    #"Cantidad<>0" = Table.SelectRows(CompraInsumo, each ([Cantidad Comprada] <> 0))
+				in
+				    #"Cantidad<>0"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,48 @@
+﻿relationship AutoDetected_0e4f290a-9408-4f49-8571-d834b3a5d9c0
+	fromColumn: FactCompras.SkIdInsumo
+	toColumn: DimInsumo.SkIdInsumo
+
+relationship AutoDetected_542f9288-764f-4054-b51f-95974a6d1924
+	fromColumn: FactControlProyecto.SkIdInsumo
+	toColumn: DimInsumo.SkIdInsumo
+
+relationship AutoDetected_0690f38c-9ed8-486e-a03b-a72cedfe0e1c
+	fromColumn: FactControlProyecto.SkIdClaseOrigen
+	toColumn: DimControlClaseOrigen.SkIdClaseOrigen
+
+relationship AutoDetected_15a165c7-7165-4b9a-b94c-0a02f648cb14
+	fromColumn: FactCompras.SkIdProyecto
+	toColumn: DimProyecto.SkIdProyecto
+
+relationship AutoDetected_6eeed467-d4b3-458b-8f54-b8d90485a731
+	fromColumn: FactControlProyecto.SkIdProyecto
+	toColumn: DimProyecto.SkIdProyecto
+
+relationship 6dc182ea-d660-4fe5-8604-425e0d6ca93c
+	fromColumn: FactControlProyecto.SkIdItems
+	toColumn: DimItems.SkIdItems
+
+relationship 3daf6a6e-78be-4c05-a8ef-b8651849f51b
+	fromColumn: FactCompras.SkIdItems
+	toColumn: DimItems.SkIdItems
+
+relationship d4e855d0-514c-ea37-f8eb-6b9457e8246c
+	fromColumn: FactCompras.CompraInsumo
+	toColumn: FactDevoluciones.CompraInsumo
+
+relationship AutoDetected_8b0cb54c-e9a1-4042-92af-534827e8012a
+	fromColumn: FactAjustes.SkIdInsumo
+	toColumn: DimInsumo.SkIdInsumo
+
+relationship AutoDetected_a4ec6242-02dd-4d61-ae66-71d51c1b8df5
+	fromColumn: FactAjustes.SkIdProyecto
+	toColumn: DimProyecto.SkIdProyecto
+
+relationship AutoDetected_b4c13808-afb8-478c-a463-3fde55aee635
+	fromColumn: 'DimControlClaseOrigen (2)'.SkIdInsumo
+	toColumn: DimInsumo.SkIdInsumo
+
+relationship AutoDetected_5dde0828-5b9c-40a4-832a-6b882c9ecf25
+	fromColumn: 'DimControlClaseOrigen (2)'.SkIdProyecto
+	toColumn: DimProyecto.SkIdProyecto
+

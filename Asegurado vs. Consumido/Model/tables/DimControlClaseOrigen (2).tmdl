@@ -1,0 +1,123 @@
+﻿table 'DimControlClaseOrigen (2)'
+
+	column SkIdEmpresa
+		dataType: int64
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: SkIdEmpresa
+
+		annotation SummarizationSetBy = Automatic
+
+	column Empresa
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Empresa
+
+		annotation SummarizationSetBy = Automatic
+
+	column SkIdFecha
+		dataType: int64
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: SkIdFecha
+
+		annotation SummarizationSetBy = Automatic
+
+	column SkIdProyecto
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdProyecto
+
+		annotation SummarizationSetBy = Automatic
+
+	column SkIdInsumo
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: SkIdInsumo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Tipo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Documento
+		dataType: int64
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: Documento
+
+		annotation SummarizationSetBy = Automatic
+
+	column Bodega
+		dataType: int64
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: Bodega
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Cantidad
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Unitario Neto'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Unitario Neto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Valor Iva'
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Valor Iva
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Unitario
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Total
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: Total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'DimControlClaseOrigen (2)' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("datamart.sincoerp.com,4263", "SincoMYTDW"),
+				    ADP_DTM_FACT_InventarioResumido = Source{[Schema="ADP_DTM_FACT",Item="InventarioResumido"]}[Data],
+				    #"Filas filtradas" = Table.SelectRows(ADP_DTM_FACT_InventarioResumido, each ([Tipo] = "DV" or [Tipo] = "EN"))
+				in
+				    #"Filas filtradas"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

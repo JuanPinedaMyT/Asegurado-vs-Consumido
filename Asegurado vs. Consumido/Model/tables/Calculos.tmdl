@@ -1,0 +1,106 @@
+﻿table Calculos
+
+	measure 'Valores Comprados' =
+			
+			CALCULATE(
+			    SUM(FactControlProyecto[Cantidad]),
+			    DimControlClaseOrigen[SkIdClaseOrigen] = 1
+			)
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Salidas Almacén' =
+			
+			CALCULATE(
+			    SUM(FactControlProyecto[Cantidad]),
+			    DimControlClaseOrigen[SkIdClaseOrigen] = 10
+			)
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Asegurado Sugerido' = ```
+			
+			VAR CantidadDisponible = MAX(0, [Cantidad Asegurada] - [Cantidad Consumida])
+			VAR EsInsumo = IF(ISINSCOPE(DimItems[Item N° Descripción]), FALSE, TRUE)
+			RETURN
+			    [Cantidad Consumida] + 
+			    IF(CantidadDisponible > 0 && NOT(EsInsumo), 
+			        CALCULATE(
+			            MAX(0, [Cantidad Asegurada] - [Cantidad Consumida]),
+			            ALLSELECTED(DimInsumo[Codigo Insumo]),
+			            FILTER(
+			                DimItems, 
+			                [Cantidad Consumida] > 0
+			            )
+			        )
+			,
+			        0
+			    ) + 
+			    IF(EsInsumo, CantidadDisponible)
+			```
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cantidad OC' = SUM(FactCompras[Cantidad Comprada])
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure OC = VALUES(FactCompras[Compra No])
+		formatString: 0
+
+	measure 'Traslados Entradas' = ```
+			
+			    CALCULATE(SUM(FactControlProyecto[Cantidad]) , DimControlClaseOrigen[SkIdClaseOrigen] = 2)
+			```
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cantidad Asegurada' = ```
+			IF(ISINSCOPE(FactCompras[Fecha OC]), BLANK(), [Valores Comprados] + [Traslados Entradas] - [Devoluciones]) 
+			```
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Reintegros =
+			
+			CALCULATE(
+			    SUM(FactControlProyecto[Cantidad]),
+			    DimControlClaseOrigen[SkIdClaseOrigen] = 5
+			)
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cantidad Consumida' = IF(ISINSCOPE(FactCompras[Fecha OC]), BLANK(), [Salidas Almacén] + [Reintegros])
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fila Significativa OC' = IF([Cantidad OC] = BLANK() || ([Cantidad OC] - [Cantidad Consumida] = 0 && [Cantidad Asegurada] - [Cantidad Consumida] = 0), BLANK(), 1)
+		formatString: 0
+
+	measure 'Fila Significativa' = IF(([Cantidad OC] - [Cantidad Consumida] = 0 && [Cantidad Asegurada] - [Cantidad Consumida] = 0) || NOT(ISINSCOPE(DimItems[Item N° Descripción])) && [Cantidad Consumida] = 0, BLANK(), 1)
+		formatString: 0
+
+	measure 'Asegurado - Consumido' = [Cantidad Asegurada] - [Cantidad Consumida]
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Devoluciones = SUMX(FactCompras, LOOKUPVALUE(FactDevoluciones[Cantidad Devuelta],FactDevoluciones[CompraInsumo], [CompraInsumo],Blank()))
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column
+		formatString: 0
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calculos = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 61ed1bd207584d3ca7da45bd88cf83b1
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+
